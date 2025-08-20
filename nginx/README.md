@@ -2,6 +2,12 @@
 
 ## Install & start nginx with docker
 
+### Auto
+
+```bash
+wget https://raw.githubusercontent.com/Lyohha/Deploy-Blanks/refs/heads/main/nginx/init.sh -O ./init.sh && chmod +x init.sh && ./init.sh 
+```
+
 ### Manual
 
 Create folder for nginx on server
