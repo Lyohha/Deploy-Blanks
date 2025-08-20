@@ -1,0 +1,55 @@
+Build server:
+  stage: build
+  image: docker:latest
+  when: manual
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:laravel-latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:laravel-latest --tag $CI_REGISTRY_IMAGE:laravel-latest --tag $CI_REGISTRY_IMAGE:laravel-$CI_COMMIT_SHA -f ./Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:laravel-$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:laravel-latest
+  only:
+    - main
+
+Deploy docker container:
+  stage: deploy
+  when: manual
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - mkdir -p ~/.ssh
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostkeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan $SSH_SERVER >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - chmod 700 ~/.ssh
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker-compose -H "ssh://$SSH_USER@$SSH_SERVER" down --remove-orphans --rmi all
+    - docker-compose -H "ssh://$SSH_USER@$SSH_SERVER" pull
+    - docker-compose -H "ssh://$SSH_USER@$SSH_SERVER" up -d
+
+Restart without pull:
+  stage: deploy
+  when: manual
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - mkdir -p ~/.ssh
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostkeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan $SSH_SERVER >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - chmod 700 ~/.ssh
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker-compose -H "ssh://$SSH_USER@$SSH_SERVER" down
+    - docker-compose -H "ssh://$SSH_USER@$SSH_SERVER" up -d

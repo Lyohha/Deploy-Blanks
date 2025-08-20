@@ -1,0 +1,33 @@
+services:
+  wordpress:
+    image: ${CI_REGISTRY_IMAGE}:wp-latest
+    container_name: wordpress_main
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: "mysql81"
+      WORDPRESS_DB_USER: "root"
+      WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
+      WORDPRESS_DB_NAME: ${DATABASE}
+    volumes:
+      - wp_plugins:/var/www/html/wp-content/plugins
+      - wp_uploads:/var/www/html/wp-content/uploads
+      - wp_config:/var/www/html/wp-config
+      # if install plugin webp_express
+      # - wp_webp_images:/var/www/html/wp-content/webp-express/webp-images
+    networks:
+      web_db:
+      nginx:
+
+volumes:
+  wp_plugins:
+  wp_uploads:
+  wp_config:
+  # wp_webp_images:
+
+networks:
+  nginx:
+    name: nginx_web
+    external: true
+  web_db:
+    name: databases_default
+    external: true

@@ -1,0 +1,29 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: "server_nginx"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./config:/etc/nginx/conf.d"
+      - www:/var/www/certbot:ro
+      - certs:/etc/nginx/ssl:ro
+    networks:
+      web:
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - www:/var/www/certbot/:rw
+      - certs:/etc/letsencrypt/:rw
+
+
+volumes:
+  certs:
+  www:
+
+networks:
+  web:
+    driver: bridge
