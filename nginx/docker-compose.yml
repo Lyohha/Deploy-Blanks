@@ -1,7 +1,7 @@
 services:
   nginx:
     image: nginx:latest
-    container_name: "server_nginx"
+    container_name: "server_nginx_test"
     restart: always
     ports:
       - "80:80"
