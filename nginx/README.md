@@ -5,7 +5,7 @@
 ### Auto
 
 ```bash
-wget -q https://raw.githubusercontent.com/Lyohha/Deploy-Blanks/refs/heads/main/nginx/init.sh -O ./init.sh && chmod +x init.sh && ./init.sh 
+bash <(wget -qO- https://raw.githubusercontent.com/Lyohha/Deploy-Blanks/refs/heads/main/nginx/init.sh)
 ```
 
 ### Manual
