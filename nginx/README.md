@@ -73,3 +73,19 @@ server {
     }
 }
 ```
+
+## Add in crontab renew.sh
+
+For auto path set:
+
+```bash
+(crontab -l 2>/dev/null; echo "0 3 1 * * $(pwd)/renew.sh >> $(pwd)/renew.log 2>&1") | crontab -
+
+```
+
+For manual path set:
+
+```bash
+(crontab -l 2>/dev/null; echo "0 3 1 * * /path/to/renew.sh >> /path/to/renew.log 2>&1") | crontab -
+```
+
