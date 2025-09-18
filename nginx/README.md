@@ -74,6 +74,13 @@ server {
 }
 ```
 
+## Install crontab
+
+```bash
+sudo apt install cron -y
+
+```
+
 ## Add in crontab renew.sh
 
 For auto path set:
