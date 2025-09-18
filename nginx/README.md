@@ -44,6 +44,12 @@ server {
 }
 ```
 
+Reload nginx
+
+```bash
+docker compose exec nginx nginx -s reload
+```
+
 Register SSL certificate for site
 
 ```bash
@@ -72,6 +78,12 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+```
+
+Reload nginx
+
+```bash
+docker compose exec nginx nginx -s reload
 ```
 
 ## Install crontab
