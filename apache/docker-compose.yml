@@ -8,15 +8,17 @@ services:
         #ports:
             # - "80:80"
         links:
-            - mysql81
+            - mysql
         volumes:
             - ./domains/:/var/www/
             - ./config/php/php.ini:/usr/local/etc/php/php.ini
             - ./config/apache/:/etc/apache2/sites-enabled/
 
-    mysql81:
+    mysql:
         image: mysql:8.1
         restart: always
+        networks:
+            nginx:
         ports:
             - "3357:3306"
         volumes:
