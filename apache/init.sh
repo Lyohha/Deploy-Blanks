@@ -14,6 +14,7 @@ mkdir "$DEPLOY_HOME/config/php"
 mkdir "$DEPLOY_HOME/config/apache"
 mkdir "$DEPLOY_HOME/domains"
 
-chown -R $DEPLOY_USER:$DEPLOY_USER $DEPLOY_HOME
+chown $DEPLOY_USER:$DEPLOY_USER $DEPLOY_HOME
+chown -R $DEPLOY_USER:$DEPLOY_USER $DEPLOY_HOME/domains
 
 passwd $DEPLOY_USER
